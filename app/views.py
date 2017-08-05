@@ -1,13 +1,13 @@
 from flask import render_template, request, g, session, redirect, url_for
 from app import app
-import psycopg2, psycopg2.extras
+import sqlite3
 from Crypto.Hash import SHA
 from utils import fromArrayToString,checkWinner
 
 def deleta(pk):
     time.sleep(15)
     cur = g.db.cursor()
-    cur.execute("DELETE FROM partidas WHERE idpartidas=%s",(pk,))
+    cur.execute("DELETE FROM partidas WHERE idpartidas=?",(pk,))
     g.db.commit()
 
 @app.route('/')
@@ -27,12 +27,11 @@ def login():
 @app.route('/login', methods=['POST'])
 def login_post():
 
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM jogador WHERE username=%s;",(request.form['username'],))
+    cur = g.db.cursor()
+    cur.execute("SELECT * FROM jogador WHERE username=?;",(request.form['username'],))
 
     data = cur.fetchall()
     cur.close()
-    print data
 
     test = SHA.new(request.form['senha'])
 
@@ -53,18 +52,13 @@ def cadastro():
 @app.route('/cadastro', methods=['POST'])
 def cadastro_post():
     if request.form['username'] != "":
-        print request.form['username']
         if request.form['senha'] != "" and request.form['senha'] == request.form['confsenha']:
-            print request.form['senha']
             try:
                 hash = SHA.new(request.form['senha'])
-
-                print "Sha ok"
-                sql = "INSERT INTO jogador (username,senha) VALUES (%s,%s)"
+                sql = "INSERT INTO jogador (username,senha) VALUES (?,?)"
 
                 cur = g.db.cursor()
                 cur.execute(sql,(request.form['username'],hash.hexdigest()))
-                print "sql ok"
                 g.db.commit()
                 cur.close()
                 return render_template('sucesso.html')
@@ -74,7 +68,7 @@ def cadastro_post():
 
 @app.route("/salas", methods=['GET'])
 def salas():
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = g.db.cursor()
     cur.execute("SELECT p.idpartidas,u.username FROM partidas p, jogador u WHERE u.idjogador=p.jogador1;")
     data = cur.fetchall()
     cur.close()
@@ -82,31 +76,27 @@ def salas():
 
 @app.route("/salas", methods=['POST'])
 def salasP():
-    print request.json
-    print "criar"
     if request.json == "criar":
         cur = g.db.cursor()
-        cur.execute("INSERT INTO partidas (jogador1,jogadordavez) VALUES (%s,%s)", (session['jogador'],session['jogador']))
+        cur.execute("INSERT INTO partidas (jogador1,jogadordavez) VALUES (?,?)", (session['jogador'],session['jogador']))
         g.db.commit()
-        cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT p.idpartidas FROM partidas p WHERE p.jogador1=%s;",(session['jogador'],))
+        cur = g.db.cursor()
+        cur.execute("SELECT p.idpartidas FROM partidas p WHERE p.jogador1=?;",(session['jogador'],))
         data = cur.fetchone()
         cur.close()
-        print data
-
         return '/sala/'+str(data['idpartidas'])
 
 
 @app.route("/logout")
 def logout():
     try:
-        cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT p.idpartidas FROM partidas p WHERE p.jogador1=%s;",(session['jogador'],))
+        cur = g.db.cursor()
+        cur.execute("SELECT p.idpartidas FROM partidas p WHERE p.jogador1=?;",(session['jogador'],))
         data = cur.fetchall()
         cur.close()
         cur = g.db.cursor()
         for i in data:
-            cur.execute("DELETE FROM partidas WHERE jogador1=%s or jogador2=%s",(session["jogador"],session["jogador"]))
+            cur.execute("DELETE FROM partidas WHERE jogador1=? or jogador2=?",(session["jogador"],session["jogador"]))
         g.db.commit()
         del session["jogador"]
     except :
@@ -116,7 +106,7 @@ def logout():
 
 @app.route("/recordes")
 def recordes():
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = g.db.cursor()
     cur.execute("SELECT username,pontuacao FROM jogador WHERE pontuacao>0 ORDER BY pontuacao DESC;")
     data = cur.fetchall()
     cur.close()
@@ -124,7 +114,7 @@ def recordes():
 
 @app.route("/historico")
 def historico():
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = g.db.cursor()
     cur.execute("SELECT * FROM historico")
     data = cur.fetchall()
     cur.close()
@@ -132,14 +122,13 @@ def historico():
 
 @app.route('/enter/<pk>')
 def entrar(pk):
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute('SELECT jogador1,jogador2 from partidas where idpartidas=%s',(pk,))
+    cur = g.db.cursor()
+    cur.execute('SELECT jogador1,jogador2 from partidas where idpartidas=?',(pk,))
     data = cur.fetchone();
     cur.close()
-    print data
     if data['jogador2'] == None and data['jogador1'] != session['jogador']:
         cur = g.db.cursor()
-        cur.execute("UPDATE partidas SET jogador2=%s WHERE idpartidas=%s",(session['jogador'],pk,))
+        cur.execute("UPDATE partidas SET jogador2=? WHERE idpartidas=?",(session['jogador'],pk,))
         g.db.commit()
         return redirect('/sala/'+pk)
     else:
@@ -149,14 +138,13 @@ def entrar(pk):
 def sala(pk):
 
     #try:
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute('SELECT jogador2 from partidas where idpartidas=%s',(pk,))
+    cur = g.db.cursor()
+    cur.execute('SELECT jogador2 from partidas where idpartidas=?',(pk,))
     data = cur.fetchone();
     cur.close()
-    print data
-    if data != [None]:
-        cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute('SELECT tabuleiro from partidas where idpartidas=%s',(pk,))
+    if data[0] != None:
+        cur = g.db.cursor()
+        cur.execute('SELECT tabuleiro from partidas where idpartidas=?',(pk,))
         data = cur.fetchone();
         cur.close()
 
@@ -175,16 +163,16 @@ def sala(pk):
         }
 
         if checkWinner(tabu)[0]:
-            cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cur.execute('SELECT jogador1,jogador2 from partidas where idpartidas=%s',(pk,))
+            cur = g.db.cursor()
+            cur.execute('SELECT jogador1,jogador2 from partidas where idpartidas=?',(pk,))
             data = cur.fetchone();
             cur.close()
 
             if checkWinner(tabu)[1] == "X":
                 if session['jogador'] == data['jogador1']:
                     cur = g.db.cursor()
-                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (%s,%s,%s)",(data['jogador1'],data['jogador2'],data['jogador1']))
-                    cur.execute("UPDATE jogador SET pontuacao=pontuacao+1 where idjogador=%s",(data['jogador1']))
+                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (?,?,?)",(data['jogador1'],data['jogador2'],data['jogador1']))
+                    cur.execute("UPDATE jogador SET pontuacao=pontuacao+1 where idjogador=?",(data['jogador1']))
                     deleta(pk)
                     g.db.commit()
                     return render_template("Ganhou.html")
@@ -200,8 +188,8 @@ def sala(pk):
                 elif session['jogador'] == data['jogador2']:
 
                     cur = g.db.cursor()
-                    cur.execute("UPDATE jogador SET pontuacao=pontuacao+1 where idjogador=%s",(data['jogador2']))
-                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (%s,%s,%s)",(data['jogador1'],data['jogador2'],data['jogador2']))
+                    cur.execute("UPDATE jogador SET pontuacao=pontuacao+1 where idjogador=?",(data['jogador2']))
+                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (?,?,?)",(data['jogador1'],data['jogador2'],data['jogador2']))
                     deleta(pk)
                     g.db.commit()
                     return render_template("Ganhou.html")
@@ -212,13 +200,12 @@ def sala(pk):
             if checkWinner(tabu)[1] == 'velha':
                 if session['jogador'] == data['jogador1']:
                     cur = g.db.cursor()
-                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (%s,%s,%s)",(data['jogador1'],data['jogador2'],'velha'))
+                    cur.execute("INSERT INTO historico (jogador1,jogador2,vencedor) VALUES (?,?,?)",(data['jogador1'],data['jogador2'],'velha'))
                     deleta(pk)
                     g.db.commit()
 
                 return render_template("partidaEncerradaV.html")
 
-        print tabu
 
         return render_template("tabuleiro.html", tabu=tabu)
     return render_template("aguarde.html")
@@ -228,8 +215,8 @@ def sala(pk):
 @app.route('/sala/<pk>', methods=['POST'])
 def salap(pk):
     var = request.json
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute('SELECT jogador1, jogadordavez, tabuleiro from partidas where idpartidas=%s',(pk,))
+    cur = g.db.cursor()
+    cur.execute('SELECT jogador1, jogadordavez, tabuleiro from partidas where idpartidas=?',(pk,))
     data = cur.fetchone();
     if session['jogador'] == data['jogadordavez']:
         tabuleiro = data['tabuleiro'].split(',')
@@ -237,16 +224,14 @@ def salap(pk):
             if session['jogador'] == data['jogador1']:
                 tabuleiro[int(request.json)] = "X"
                 cur = g.db.cursor()
-                cur.execute("UPDATE partidas SET jogadordavez=jogador2 WHERE idpartidas=%s",(pk,))
+                cur.execute("UPDATE partidas SET jogadordavez=jogador2 WHERE idpartidas=?",(pk,))
             else:
                 tabuleiro[int(request.json)] = "O"
-                cur.execute("UPDATE partidas SET jogadordavez=jogador1 WHERE idpartidas=%s",(pk,))
+                cur.execute("UPDATE partidas SET jogadordavez=jogador1 WHERE idpartidas=?",(pk,))
         tabustr = fromArrayToString(tabuleiro)
 
-        print tabustr
         cur = g.db.cursor()
-        print cur
-        cur.execute("UPDATE partidas SET tabuleiro=%s WHERE idpartidas=%s",(tabustr,pk,))
+        cur.execute("UPDATE partidas SET tabuleiro=? WHERE idpartidas=?",(tabustr,pk,))
         cur.close()
         g.db.commit()
 
@@ -262,8 +247,8 @@ def conta():
 
 @app.route("/conta", methods=["Post"])
 def contap():
-    cur = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * From jogador Where idjogador=%s",(session['jogador'],))
+    cur = g.db.cursor()
+    cur.execute("SELECT * From jogador Where idjogador=?",(session['jogador'],))
     data = cur.fetchall()
     cur.close()
 
@@ -273,7 +258,7 @@ def contap():
         if request.form['novasenha'] == request.form['confnovasenha']:
             hash2 = SHA.new(request.form['novasenha'])
             cur = g.db.cursor()
-            cur.execute("UPDATE jogador SET senha=%s WHERE idjogador=%s", (hash2.hexdigest(),data[0]['idjogador']))
+            cur.execute("UPDATE jogador SET senha=? WHERE idjogador=?", (hash2.hexdigest(),data[0]['idjogador']))
             cur.close()
             g.db.commit()
 
@@ -286,7 +271,8 @@ def contap():
 
 @app.before_request
 def before_request():
-   g.db = psycopg2.connect("dbname=jogovelha user=postgres password=sebastian host=127.0.0.1")
+   g.db = sqlite3.connect("OLG.db")
+   g.db.row_factory = sqlite3.Row
 
 @app.teardown_request
 def teardown_request(exception):
