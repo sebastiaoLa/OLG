@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block page_title %}
+	Salas
+{% endblock%}
+
+{% block headContent %}
+
+<script type="text/javascript">
+	function cliquei() {
+	    $.ajax({
+	      type : "POST",
+	      url : window.location,
+	      data: JSON.stringify("criar", null, '\t'),
+	      contentType: 'application/json;charset=UTF-8',
+	      success: function(result) {
+	        console.log(result);
+					window.location = result;
+	      }
+	    })}
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<body>
+<div style="margin-top:20%; margin-bottom:20%">
+	<div class='u-pull-right' style="padding-right:10%"> <button class="button button-primary" name="button" onclick="cliquei();">Criar sala</button> </div>
+<center><table style="width:80%">
+  <h1 style="font-family: 'Nixie One';"> Salas Ativas </h1>
+</center>
+  <tr>
+    <th><center>Sala #</center></th>
+    <th><center>Criador</center></th>
+    <th><center></center></th>
+  </tr>
+  {% for row in rows %}
+  <tr>
+    <td style=""><center>{{row.idpartidas}}</center></td>
+    <td style="font-size:1.7em"><center>{{row.username}}</center></td>
+    <td><div style="padding-right: 20px" class="u-pull-right"> <a class="button button-primary" style="font-family:'Raleway'" href="/enter/{{row.idpartidas}}"  style="font-family:"Raleway""> Entrar</a></div></td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+</body>
+{% endblock %}

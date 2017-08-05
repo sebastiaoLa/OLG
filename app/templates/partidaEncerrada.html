@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block page_title %} Encerrado {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoIndex() {
+				setTimeout(function() {
+					window.location="/";
+				}, 2000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoIndex();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> A Partida foi Encerrada! </h1></center>
+		</div>
+	</body>
+{% endblock %}

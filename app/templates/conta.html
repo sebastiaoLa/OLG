@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block page_title %} Conta {% endblock %}
+
+
+{% block content %}
+<body >
+	<div style="margin-top:15%; margin-bottom:18%">
+		<center><h1 >Atualização de Cadastro</h1></center>
+		<form method="post">
+			<center><input type="password" name="senha" size = "100" placeholder="Senha Atual" ></center>
+			<br>
+			<center><input type="password" name="novasenha" size = "100" placeholder="Nova Senha"></center>
+			<center><input type="password" name="confnovasenha" size = "100" placeholder="Confirmação da Nova Senha"></center>
+			<br>
+			<center><button class="button-primary" type=submit>Atualizar</button></center>
+		</form>
+
+	</div>
+</body>
+{% endblock %}

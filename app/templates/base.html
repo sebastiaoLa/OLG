@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+
+<html id="algo" lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" style="
+background:url({{ url_for('static', filename='img/nat.jpg') }});">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1;">
+  <title> Jogo da Velha - {% block page_title %}{% endblock %}</title>
+
+  <!--<link href="//fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">-->
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <!--<script >
+  $(window).scroll(function() {
+   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+       $( "#johnAud" )[0].play();
+   }
+  });
+
+</script>-->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fontes.css') }}">
+
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+
+
+  	<nav class="navbar">
+  		<div class="container">
+  			<ul class="navbar-list">
+    			<li class="navbar-item"><a class="navbar-link" href="/">Index</a></li>
+  			{% if "jogador" in session%}
+
+  			<li class="navbar-item"><a class="navbar-link" href="/salas">Salas</a></li>
+  			<li class="navbar-item"><a class="navbar-link" href="/conta">Conta</a></li>
+
+  		{% endif %}
+  			<li class="navbar-item"><a class="navbar-link" href="/historico">Resultados</a></li>
+  			<li class="navbar-item"><a class="navbar-link" href="/recordes">Recordes</a></li>
+  		</ul>
+  		{% if "jogador" in session %}
+            <div class="u-pull-right" style="margin-top:1.5%"><a class="button" href="/logout">Logout</a></li>
+          {% else %}
+  				<div class="u-pull-right" style="margin-top:1.5%;"><a class="button" href="/cadastro">Cadastrar</a></li>
+  				<div class="u-pull-right" ><a style="margin-left:1.5%" class="button" href="/login">Login</a></li>
+  				</div>
+  	  {% endif %}
+  		</div>
+  	</div>
+  </nav>
+
+  {% block headContent %}
+  {% endblock %}
+
+</head>
+
+{% block content %}
+{% endblock %}
+
+<footer >
+  <div name="JOHN" id="JOHN" class="John" >
+      <h2  style="color: green; font-family:'Raleway'">JOHN CENA</h2>
+
+      <audio id="johnAud" src="{{ url_for('static', filename='aud/john.mp3') }}">
+
+      </audio>
+  </div>
+
+  <div id="log"></div>
+
+</footer>
+
+
+</html>

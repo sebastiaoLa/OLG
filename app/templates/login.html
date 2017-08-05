@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block page_title %} Login {% endblock %}
+
+
+
+{% block content %}
+<body>
+      <!--  <div class="u-pull-left">
+          <li class="button button-primary" href="/Salas">Salas</a>
+          <li class="button button-primary"  href="/Conta">Conta</a>
+          <li class="button button-primary"  href="/HistoricoPartidas">Resultados</a>
+          <li class="button button-primary"  href="/Placar">Recordes</a>
+        </div>
+        <div class="container u-pull-right">
+     			<button class="button-primary" type=submit>Logout</button>
+   		 </div>
+        <div class="u-pull-right">
+          <li class="button button-primary" href="/cadastro">Cadastrar</button>
+          <li class="button button-primary" href="/login">Login</button>
+        </div>-->
+
+	<center>
+	<div style="margin-top:10%; margin-bottom:27%;">
+		<center><h1 >Jogo da Velha</h1></center>
+		<center>
+		<form method="post">
+			<center><input class="testando" type="text" name="username" placeholder="Username" ><br></center>
+			<center><input type="password" class="testando" name="senha"  placeholder="Senha"></center>
+			<br>
+			<center><button class="button-primary" type=submit>Login</button> <a class="button button-primary" href="/cadastro"> Cadastro</a></center>
+		</form>
+	</center>
+	</div>
+</center>
+</body>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block page_title %}
+	Cadastro
+{% endblock%}
+
+{% block content %}
+
+<body >
+	<div style="margin-top: 15%; margin-bottom:20%">
+		<center><h1 >Cadastro </h1></center>
+		<form method="post">
+			<center><input class="testando" type="text" name="username" placeholder=Username><br></center>>
+			<center><input class="testando" type="password" name="senha" placeholder=Senha><br></center>>
+			<center><input class="testando" type="password" name="confsenha" placeholder="Confirmação da Senha"></center>
+			<br>
+			<center><button class="button-primary" type=submit>Cadastrar</button></center>
+		</form>
+
+	</div>
+</body>
+{% endblock %}

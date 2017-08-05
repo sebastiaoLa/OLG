@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block page_title %} Ganhou :D {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoIndex() {
+				$( "#johnAud" )[0].play();
+				setTimeout(function() {
+					window.location="/";
+				}, 15000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoIndex();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> Parabéns você Ganhou :D </h1></center>
+		</div>
+
+
+
+		</audio>
+
+	</body>
+{% endblock %}

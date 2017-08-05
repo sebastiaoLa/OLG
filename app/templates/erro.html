@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %} Algo deu errado :-( {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoCadastro() {
+				setTimeout(function() {
+					window.location="/cadastro";
+					}, 3000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoCadastro();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> Algo deu errado no seu cadastro <br> por favor, tente novamente. </h1></center>
+				<center><a class="button button-primary" href="/cadastro"> Tentar Novamente</a></center>
+		</div>
+	</body>
+{% endblock %}

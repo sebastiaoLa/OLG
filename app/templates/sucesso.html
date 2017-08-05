@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_title %}
+	Pronto para uso
+{% endblock%}
+
+{% block headContent %}
+
+<script>
+			function GoLogin() {
+				setTimeout(function() {
+					window.location="/login";
+				}, 5000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+<body onload="GoLogin();">
+	<div style="margin-top:17%; margin-bottom:27%">
+		<center><h1 >Cadastro realizado com sucesso.</h1></center>
+		<center><a class="button button-primary" href="/login"> Fazer Login</a></center>
+	</div>
+</body>
+{% endblock %}

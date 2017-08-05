@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %} Algo deu errado :-( {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoLogin() {
+				setTimeout(function() {
+					window.location="/login";
+					}, 3000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content%}
+<body onload="GoLogin();">
+	<div style="margin-top:15%; margin-bottom:27%">
+		<center><h1> Senha ou Usuário errado <br> por favor, tente novamente. </h1></center>
+		<center><a class="button button-primary" href="/login"> Tentar Novamente</a></center>
+	</div>
+</body>
+{% endblock %}

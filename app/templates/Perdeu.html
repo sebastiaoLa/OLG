@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_title %} Perdeu :( {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoIndex() {
+				$( "#sad" )[0].play();
+				setTimeout(function() {
+					window.location="/";
+				}, 15000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoIndex();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> Perdeu :( </h1></center>
+		</div>
+
+		<audio id="sad" src="{{ url_for('static', filename='aud/sad.mp3') }}">
+	</body>
+{% endblock %}

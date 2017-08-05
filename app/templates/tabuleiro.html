@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block page_title %}
+	Jogo
+{% endblock%}
+
+{% block headContent %}
+<script>
+  function cliquei(sender) {
+    console.log("sender.name");
+    console.log(sender.name);
+    $.ajax({
+      type : "POST",
+      url : window.location,
+      data: JSON.stringify(sender.name, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      success: function(result) {
+        console.log(result);
+      }
+    });
+    setTimeout(function() {
+      window.location=window.location;
+    }, 500);
+  }
+  function GoIndex() {
+    setTimeout(function() {
+      window.location=window.location;
+    }, 1200);
+  }
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+<body onload="GoIndex();">
+  <div class="tabela" style="margin-top:2%; margin-bottom:20%">
+    <center>
+      <table style="width:25%">
+    </center>
+    <tr class="td">
+      <td class="td"><div style="margin-left:48px;" ><button onclick="cliquei(this);" class="button-primary btnJogo"  name="0"> {{ tabu.pos0 }} </button></div></td>
+      <td class="td"><div style="margin-left:24px; margin-right:24px"><button onclick="cliquei(this);" class="button-primary btnJogo" name="1"> {{ tabu.pos1 }} </button></div></td>
+      <td class="td"><div style="margin-right:48px;"><button onclick="cliquei(this);" class="button-primary btnJogo" name="2"> {{ tabu.pos2 }} </button></div></td>
+    </tr>
+    <tr class="td">
+      <td class="td"><div style="margin-left:48px;"><button onclick="cliquei(this);" class="button-primary btnJogo" name="3"> {{ tabu.pos3 }} </button></div></td>
+      <td class="td"><div style="margin-left:24px; margin-right:24px"><button onclick="cliquei(this);" class="button-primary btnJogo" name="4"> {{ tabu.pos4 }} </button></div></td>
+      <td class="td"><div style="margin-right:48px;"><button onclick="cliquei(this);" class="button-primary btnJogo" name="5"> {{ tabu.pos5 }} </button></div></td>
+    </tr>
+    <tr class="td">
+      <td class="td"><div style="margin-left:48px;"><button onclick="cliquei(this);" class="button-primary btnJogo" name="6"> {{ tabu.pos6 }} </button></div></td>
+      <td class="td"><div  style="margin-left:24px; margin-right:24px"><button onclick="cliquei(this);" class="button-primary btnJogo" name="7"> {{ tabu.pos7 }} </button></div></td>
+      <td class="td"><div style="margin-right:48px;"><button onclick="cliquei(this);"  class="button-primary btnJogo" name="8"> {{ tabu.pos8 }} </button></div></td>
+    </tr>
+
+    </table>
+  </div>
+
+</body>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block page_title %} Algo deu errado :-( {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoIndex() {
+				setTimeout(function() {
+					window.location="/index";
+					}, 3000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoIndex();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> Senha Alterada com Sucesso. </h1></center>
+		</div>
+	</body>
+{% endblock %}

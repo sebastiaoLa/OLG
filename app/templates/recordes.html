@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block page_title %} Recordes {% endblock %}
+
+{% block content%}
+<body>
+  <div style="margin-top:20%; margin-bottom:20%">
+    <center>
+      <h1> Placar Geral</h1>
+    </center><center>
+    <table style="width:80%">
+      <tr>
+        <th><center>Username</center></th>
+        <th><center>Pontuação</center></th>
+      </tr>
+
+      {% for row in rows %}
+        <tr>
+          <td><center>{{row.username}}</center></td>
+          <td><center>{{row.pontuacao}}</center></td>
+        </tr>
+    {% endfor %}
+  </table></center>
+  </div>
+
+</body>
+{% endblock %}

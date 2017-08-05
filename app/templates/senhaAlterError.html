@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block page_title %} Algo deu errado :-( {% endblock %}
+
+{% block headContent %}
+
+<script>
+			function GoConta() {
+				setTimeout(function() {
+					window.location="/conta";
+					}, 3000);
+			}
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<body onload="GoConta();">
+		<div style="margin-top:15%; margin-bottom:27%;">
+				<center><h1> Falha ao alterar a senha. </h1></center>
+		</div>
+	</body>
+{% endblock %}
